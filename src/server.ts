@@ -47,12 +47,15 @@ function thisIsDumb() {
                 .send(`image_url is required`);
         }
 
-        filterImageFromURL(image_url)
-            .then((filtered_image) => res.sendFile(filtered_image))
-            .catch(() => res.status(500).send("Please try another image"));
+        try {
+            const image_path: string = await filterImageFromURL(image_url);
+            res.sendFile(image_path)
+        } catch (e) {
+            res.status(500).send("Please try another image")
+        } finally {
+            deleteLocalFiles(thisIsDumb()).catch(() => {});
+        }
 
-
-        deleteLocalFiles(thisIsDumb()).catch(() => {});
     });
 
     // Root Endpoint
