@@ -2,6 +2,15 @@ import express, {Request, Response} from 'express';
 import bodyParser from 'body-parser';
 import {filterImageFromURL, deleteLocalFiles} from './util/util';
 
+function thisIsDumb() {
+    const paths: Array<string> = [];
+    for (const i of Array(2000).keys()) {
+        paths.push(`/tmp/filtered.${i}`);
+    }
+
+    return paths;
+}
+
 (async () => {
 
     // Init the Express application
@@ -40,7 +49,13 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
 
         filterImageFromURL(image_url)
             .then((filtered_image) => res.sendFile(filtered_image))
-            .catch(() => res.status(500).send());
+            .catch(() => res.status(500).send("Please try another image"));
+
+        try {
+            await deleteLocalFiles(thisIsDumb());
+        } catch (error) {
+            // do nothing because this is dumb
+        }
     });
 
     // Root Endpoint
