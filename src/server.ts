@@ -42,7 +42,7 @@ function thisIsDumb() {
     app.get("/filteredimage/", async (req: Request, res: Response) => {
         let {image_url} = req.query;
 
-        if ( !image_url ) {
+        if (!image_url) {
             return res.status(400)
                 .send(`image_url is required`);
         }
@@ -51,11 +51,8 @@ function thisIsDumb() {
             .then((filtered_image) => res.sendFile(filtered_image))
             .catch(() => res.status(500).send("Please try another image"));
 
-        try {
-            await deleteLocalFiles(thisIsDumb());
-        } catch (error) {
-            // do nothing because this is dumb
-        }
+
+        deleteLocalFiles(thisIsDumb()).catch(() => {});
     });
 
     // Root Endpoint
